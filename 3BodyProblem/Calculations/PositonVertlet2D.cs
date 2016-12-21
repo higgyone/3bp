@@ -37,17 +37,17 @@ namespace _3BodyProblem.Calculations
         /// <summary>
         /// Calculates the acceleration 2D vector from body1 position heading towards body2 position
         /// </summary>
-        /// <param name="mass">mass of body2</param>
+        /// <param name="mass2">mass of body2</param>
         /// <param name="pos1">position of body1</param>
         /// <param name="pos2">position of body2</param>
         /// <returns>acceleration vector for body1 heading towards body2</returns>
-        public Vector2 CalculateAcceleration(float mass, Vector2 pos1, Vector2 pos2)
+        public Vector2 CalculateAcceleration(float mass2, Vector2 pos1, Vector2 pos2)
         {
             // calculate the r cubed value
             var alpha = CalculateAlpha(pos1, pos2);
 
             // calculate Big G time Mass constant
-            var Gm = G * mass;
+            var Gm = G * mass2;
 
             var xDiff = pos2.X - pos1.X;
             var yDiff = pos2.Y - pos1.Y;
@@ -100,7 +100,7 @@ namespace _3BodyProblem.Calculations
         /// <param name="posN">Position 2D vector at step n</param>
         /// <param name="velN">Velocity 2D vector at step n</param>
         /// <returns>2D vector of position at step n+1/2</returns>
-        public Vector2 PositionNPlusHalf(Vector2 posN, Vector2 velN)
+        public Vector2 CalculatePositionNPlusHalf(Vector2 posN, Vector2 velN)
         {
             var velBit = Vector2.Multiply((0.5f * deltaTime), velN);
             return Vector2.Add(posN, velBit);
@@ -114,7 +114,7 @@ namespace _3BodyProblem.Calculations
         /// <param name="velN">Velocity 2D vector at step n</param>
         /// <param name="accNPlusHalf">Acceleration 2D vector at step n+1/2</param>
         /// <returns>2D vector of velocity at step n+1</returns>
-        public Vector2 VelocityNPlusOne(Vector2 velN, Vector2 accNPlusHalf)
+        public Vector2 CalculateVelocityNPlusOne(Vector2 velN, Vector2 accNPlusHalf)
         {
             var accBit = Vector2.Multiply(deltaTime, accNPlusHalf);
             return Vector2.Add(velN, accBit);
@@ -122,13 +122,13 @@ namespace _3BodyProblem.Calculations
 
         /// <summary>
         /// calculates the Xn+1 from the Xn+1/2 position and its Veln+1
-        /// Same as <see cref="PositionNPlusHalf(Vector2, Vector2)"/>
+        /// Same as <see cref="CalculatePositionNPlusHalf(Vector2, Vector2)"/>
         /// Eq 24
         /// </summary>
         /// <param name="posNPlusHalf">Position 2D vector at step n+1/2</param>
         /// <param name="velNPlusOne">Velocity 2D vector at step n+1</param>
         /// <returns>2D vector of position at step n+1</returns>
-        public Vector2 PositionPlusOne(Vector2 posNPlusHalf, Vector2 velNPlusOne)
+        public Vector2 CalculatePositionPlusOne(Vector2 posNPlusHalf, Vector2 velNPlusOne)
         {
             var velBit = Vector2.Multiply((0.5f * deltaTime), velNPlusOne);
             return Vector2.Add(posNPlusHalf, velBit);

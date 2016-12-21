@@ -71,7 +71,7 @@ namespace _3BodyProblem.Calculations.Tests
             posVer.SetDeltaTime(1);
 
             var xNPlusHalfExpected = new Vector2(2, 2);
-            var xNPlusHalf = posVer.PositionNPlusHalf(initialPos, initialVel);
+            var xNPlusHalf = posVer.CalculatePositionNPlusHalf(initialPos, initialVel);
 
             Assert.IsTrue(xNPlusHalfExpected == xNPlusHalf);
         }
@@ -85,7 +85,7 @@ namespace _3BodyProblem.Calculations.Tests
             posVer.SetDeltaTime(1);
 
             var velNPlusOneExpected = new Vector2(3, 3);
-            var velNPlusOne = posVer.VelocityNPlusOne(initialVel, initialAcc);
+            var velNPlusOne = posVer.CalculateVelocityNPlusOne(initialVel, initialAcc);
 
             Assert.IsTrue(velNPlusOneExpected == velNPlusOne);
         }
