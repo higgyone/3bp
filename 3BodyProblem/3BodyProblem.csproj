@@ -59,6 +59,10 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="FramesPerSecond.cs" />
+    <Compile Include="Renderer.cs" />
+    <Compile Include="Sprite.cs" />
+    <Compile Include="Stars.cs" />
     <Page Include="MainWindow.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
@@ -70,6 +74,10 @@
     <Compile Include="Body\Body.cs" />
     <Compile Include="Body\BodyManager.cs" />
     <Compile Include="Calculations\PositonVertlet2D.cs" />
+    <Compile Include="DisplayCanvas.cs" />
+    <Compile Include="Loop\FastLoop.cs" />
+    <Compile Include="IDisplayCanvas.cs" />
+    <Compile Include="Loop\PrecisionTimer.cs" />
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
@@ -102,6 +110,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="target.png" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

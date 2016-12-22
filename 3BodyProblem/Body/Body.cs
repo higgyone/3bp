@@ -16,9 +16,9 @@ namespace _3BodyProblem.Body
         public float Mass { get; private set; }
 
         /// <summary>
-        /// 2nd body
+        /// Diameter
         /// </summary>
-        //public Body SecondBody { get; private set; }
+        public Double Diameter { get; private set; }
 
         /// <summary>
         /// the initial X1/2 posiytion
@@ -45,9 +45,10 @@ namespace _3BodyProblem.Body
         /// </summary>
         public Vector2 Acceleration { get; internal set; }
 
-        public Body(float mass, Vector2 initialPos, Vector2 initialVel)
+        public Body(float mass, double diameter, Vector2 initialPos, Vector2 initialVel)
         {
             Mass = mass;
+            Diameter = diameter;
             Position = initialPos;
             Velocity = initialVel;
         }
