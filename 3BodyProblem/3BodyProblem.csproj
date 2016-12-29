@@ -60,6 +60,7 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="FramesPerSecond.cs" />
+    <Compile Include="IRenderer.cs" />
     <Compile Include="Renderer.cs" />
     <Compile Include="Sprite.cs" />
     <Compile Include="Stars.cs" />

@@ -1,20 +1,25 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace _3BodyProblem
+﻿namespace _3BodyProblem
 {
-    public class Renderer
+    /// <summary>
+    /// class to put stuff on the display canvas
+    /// </summary>
+    public class Renderer : IRenderer
     {
-        public readonly IDisplayCanvas displayCanvas;
+        /// <summary>
+        /// display canvas where everything is drawn
+        /// </summary>
+        private readonly IDisplayCanvas displayCanvas;
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="displayCanvas">canvas to diaply everything on</param>
         public Renderer(IDisplayCanvas displayCanvas)
         {
             this.displayCanvas = displayCanvas;
         }
 
+        /// <inherit/>
         public void DrawSprite(Sprite[] sprite)
         {
             foreach (Sprite s in sprite)
@@ -23,24 +28,34 @@ namespace _3BodyProblem
             }
         }
 
+        /// <inherit/>
         public void RemoveSprite(Sprite sprite)
         {
             displayCanvas.RemoveCanvasChild(sprite.DisplaySprite);
         }
 
+        /// <inherit/>
         public double GetRenderWidth()
         {
             return displayCanvas.GetCanvasWidth();
         }
 
+        /// <inherit/>
         public double GetRenderHeight()
         {
             return displayCanvas.GetCanvasHeight();
         }
 
+        /// <inherit/>
         public void ClearCanvas()
         {
             displayCanvas.ClearCanvas();
+        }
+
+        /// <inherit/>
+        public IDisplayCanvas GetDisplayCanvas()
+        {
+            return displayCanvas;
         }
     }
 }

@@ -23,7 +23,7 @@ namespace _3BodyProblem
         /// <summary>
         /// renderer for the sprites
         /// </summary>
-        private Renderer renderer;
+        private IRenderer renderer;
 
         /// <summary>
         /// body manager object
@@ -33,7 +33,7 @@ namespace _3BodyProblem
         /// <summary>
         /// time to speed it up by
         /// </summary>
-        private uint timeMultiplier = 100;
+        private uint timeMultiplier = 200;
 
         public MainWindow()
         {
@@ -48,8 +48,8 @@ namespace _3BodyProblem
             bodyManager = new BodyManager
             (
                 renderer, 
-                new Body.Body(100000f, 25, new Vector2(1, 1), new Vector2(0.9f, 0.001f)),
-                new Body.Body(10000000000000f, 35, new Vector2(500, 300), new Vector2(0.00000001f, 0.0000000001f))
+                new Body.Body(10000000000000f, 25, new Vector2(800, 200), new Vector2(0.9f, 0.001f)),
+                new Body.Body(10000000000000f, 25, new Vector2(1100, 600), new Vector2(-1.0f, 0.0000000001f))
             );
         }
 

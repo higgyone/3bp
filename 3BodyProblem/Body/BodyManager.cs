@@ -34,7 +34,7 @@ namespace _3BodyProblem.Body
         /// <summary>
         /// renderer for the bodies
         /// </summary>
-        private Renderer renderer;
+        private IRenderer renderer;
 
         /// <summary>
         /// display canvas
@@ -86,10 +86,10 @@ namespace _3BodyProblem.Body
         /// </summary>
         private Label fpsLabel;
 
-        public BodyManager(Renderer renderer, Body body1, Body body2)
+        public BodyManager(IRenderer renderer, Body body1, Body body2)
         {
             this.renderer = renderer;
-            displayCanvas = renderer.displayCanvas;
+            displayCanvas = renderer.GetDisplayCanvas();
             this.body1 = body1;
             this.body2 = body2;
 
@@ -97,7 +97,7 @@ namespace _3BodyProblem.Body
 
             SetupBodySprites();
 
-            //stars = new Stars(displayCanvas);
+            stars = new Stars(renderer);
         }
 
         /// <summary>
@@ -165,7 +165,6 @@ namespace _3BodyProblem.Body
         {
             body2Image = new Image();
             Uri imageUri = new Uri(@"target.png", UriKind.Relative);
-            //Uri imageUri = new Uri(string.Format(@"{0}", textureManager.Get("redTarget")), UriKind.Relative);
 
             body2Image.Source = new BitmapImage(imageUri);
             body2Image.Width = body2.Diameter;
@@ -189,6 +188,8 @@ namespace _3BodyProblem.Body
         public void UpdatePositions(float deltaTime, uint timeMultiplier = 1)
         {
             fps.Process(deltaTime / timeMultiplier);
+
+            stars.Update(deltaTime / timeMultiplier);
 
             posVer.SetDeltaTime(deltaTime);
 
@@ -229,8 +230,8 @@ namespace _3BodyProblem.Body
 
             fpsLabel.Content = "FPS: " + fps.CurrentFPS.ToString("F2");
 
-            sprite1.SetPosition(body1.Position);
-            sprite2.SetPosition(body2.Position);
+            sprite1.SetPosition(body1.Position/2);
+            sprite2.SetPosition(body2.Position/2);
         }
     }
 }

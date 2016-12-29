@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Numerics;
-
 
 namespace _3BodyProblem.Body
 {
+    /// <summary>
+    /// holder of the information on the body
+    /// </summary>
     public class Body
     {
         /// <summary>
@@ -45,6 +43,13 @@ namespace _3BodyProblem.Body
         /// </summary>
         public Vector2 Acceleration { get; internal set; }
 
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="mass">mass of the body</param>
+        /// <param name="diameter">display diameter of the body</param>
+        /// <param name="initialPos">initial 2D vector position of the body</param>
+        /// <param name="initialVel">initial 2D velocity vector of the body</param>
         public Body(float mass, double diameter, Vector2 initialPos, Vector2 initialVel)
         {
             Mass = mass;
