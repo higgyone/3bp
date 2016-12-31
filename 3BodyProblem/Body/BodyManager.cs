@@ -86,6 +86,17 @@ namespace _3BodyProblem.Body
         /// </summary>
         private Label fpsLabel;
 
+        /// <summary>
+        /// divisor for the positions to fit larger orbits on the canvas
+        /// </summary>
+        private uint positionDivider = 5;
+
+        /// <summary>
+        /// constructor
+        /// </summary>
+        /// <param name="renderer">renderer</param>
+        /// <param name="body1">body1 info</param>
+        /// <param name="body2">body 2 info</param>
         public BodyManager(IRenderer renderer, Body body1, Body body2)
         {
             this.renderer = renderer;
@@ -181,16 +192,24 @@ namespace _3BodyProblem.Body
         }
 
         /// <summary>
-        /// update the body positions 
+        /// update the background stars and FPS outside body loop
         /// </summary>
         /// <param name="deltaTime">time difference between frames</param>
         /// <param name="timeMultiplier">what the elapsed time has been multiplied by to speed smulation up</param>
-        public void UpdatePositions(float deltaTime, uint timeMultiplier = 1)
+        public void UpdateBackground(float deltaTime, uint timeMultiplier = 1)
         {
             fps.Process(deltaTime / timeMultiplier);
 
             stars.Update(deltaTime / timeMultiplier);
+        }
 
+        /// <summary>
+        /// update the body positions 
+        /// </summary>
+        /// <param name="deltaTime">difference between each calculation loop</param>
+        public void UpdatePositions(float deltaTime)
+        {
+            
             posVer.SetDeltaTime(deltaTime);
 
             if (firstRun)
@@ -221,6 +240,9 @@ namespace _3BodyProblem.Body
             body2.PositionHalf = posVer.CalculatePositionNPlusHalf(body2.Position, body2.Velocity);
         }
 
+        /// <summary>
+        /// redender to the screen
+        /// </summary>
         public void Render()
         {
             if (!displayCanvas.CanvasChildContainsElement(fpsLabel))
@@ -230,8 +252,8 @@ namespace _3BodyProblem.Body
 
             fpsLabel.Content = "FPS: " + fps.CurrentFPS.ToString("F2");
 
-            sprite1.SetPosition(body1.Position/2);
-            sprite2.SetPosition(body2.Position/2);
+            sprite1.SetPosition(body1.Position / positionDivider);
+            sprite2.SetPosition(body2.Position/ positionDivider);
         }
     }
 }

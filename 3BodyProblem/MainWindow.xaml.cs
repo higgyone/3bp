@@ -35,6 +35,16 @@ namespace _3BodyProblem
         /// </summary>
         private uint timeMultiplier = 200;
 
+        /// <summary>
+        /// number of positions to calculate between renderers
+        /// </summary>
+        private uint updateNumber = 500;
+
+        /// <summary>
+        /// time difference between each update step for positions
+        /// </summary>
+        private float deltaTime = 0.1f;
+
         public MainWindow()
         {
             InitializeComponent();
@@ -48,8 +58,8 @@ namespace _3BodyProblem
             bodyManager = new BodyManager
             (
                 renderer, 
-                new Body.Body(10000000000000f, 25, new Vector2(800, 200), new Vector2(0.9f, 0.001f)),
-                new Body.Body(10000000000000f, 25, new Vector2(1100, 600), new Vector2(-1.0f, 0.0000000001f))
+                new Body.Body(10000000000000f, 25, new Vector2(2000, 1000), new Vector2(0.3f, 0.001f)),
+                new Body.Body(10000000000000f, 25, new Vector2(5000, 2000), new Vector2(-0.3f, 0.0000000001f))
             );
         }
 
@@ -59,7 +69,14 @@ namespace _3BodyProblem
         /// <param name="elapsedTime">time elapsed since last render</param>
         private void GameLoop(float elapsedTime)
         {
-            bodyManager.UpdatePositions(elapsedTime * timeMultiplier, timeMultiplier);
+            // use this loop to speed up the simulation
+            for (uint i = 0; i < updateNumber; i++)
+            {
+                bodyManager.UpdatePositions(deltaTime);
+            }
+
+            bodyManager.UpdateBackground(elapsedTime * timeMultiplier, timeMultiplier);
+
             bodyManager.Render();
         }
     }
