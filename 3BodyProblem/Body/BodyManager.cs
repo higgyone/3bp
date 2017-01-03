@@ -1,11 +1,9 @@
-﻿using System;
+﻿using _3BodyProblem.Calculations;
+using System;
+using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
-using System.Windows;
 using System.Windows.Media.Imaging;
-using _3BodyProblem.Calculations;
-using System.Threading;
-using System.Numerics;
 
 namespace _3BodyProblem.Body
 {
@@ -92,6 +90,26 @@ namespace _3BodyProblem.Body
         private uint positionDivider = 5;
 
         /// <summary>
+        /// label to display the speed
+        /// </summary>
+        private Label speedLabel;
+
+        /// <summary>
+        /// add 100 to speed button
+        /// </summary>
+        private Button add100Button;
+
+        /// <summary>
+        /// subtract 100 from speed button
+        /// </summary>
+        private Button sub100Button;
+
+        /// <summary>
+        /// current speed value
+        /// </summary>
+        private uint speedValue = 100;
+
+        /// <summary>
         /// constructor
         /// </summary>
         /// <param name="renderer">renderer</param>
@@ -105,6 +123,9 @@ namespace _3BodyProblem.Body
             this.body2 = body2;
 
             SetupFPSCanvas();
+            SetupSpeedLabel();
+            Add100Button();
+            Sub100Button();
 
             SetupBodySprites();
 
@@ -119,6 +140,86 @@ namespace _3BodyProblem.Body
             fpsLabel = new Label();
             fpsLabel.Foreground = Brushes.Red;
             fpsLabel.Margin = new Thickness(2);
+
+            if (!displayCanvas.CanvasChildContainsElement(fpsLabel))
+            {
+                displayCanvas.AddCanvasChild(fpsLabel);
+            }
+        }
+
+        /// <summary>
+        /// add the plus 100 speed button to the canvas
+        /// </summary>
+        private void Add100Button()
+        {
+            add100Button = new Button();
+            add100Button.Margin = new Thickness(100, 0, 0, 0);
+            add100Button.Click += new RoutedEventHandler(add100ButtonClick);
+            add100Button.Content = "+100";
+            add100Button.Width = 35;
+
+            if (!displayCanvas.CanvasChildContainsElement(add100Button))
+            {
+                displayCanvas.AddCanvasChild(add100Button);
+            }
+        }
+
+        /// <summary>
+        /// click event for the add 100 button
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <param name="e"></param>
+        private void add100ButtonClick(object obj, RoutedEventArgs e)
+        {
+            speedValue = speedValue + 100;
+            speedLabel.Content = speedValue;
+        }
+
+        /// <summary>
+        /// add the subtract 100 from speed value button
+        /// </summary>
+        private void Sub100Button()
+        {
+            sub100Button = new Button();
+            sub100Button.Margin = new Thickness(100, 25, 0, 0);
+            sub100Button.Click += new RoutedEventHandler(sub100ButtonClick);
+            sub100Button.Content = "-100";
+            sub100Button.Width = 35;
+
+            if (!displayCanvas.CanvasChildContainsElement(sub100Button))
+            {
+                displayCanvas.AddCanvasChild(sub100Button);
+            }
+        }
+
+        /// <summary>
+        /// add a reduce speed by 100 button
+        /// </summary>
+        /// <param name="obj">object</param>
+        /// <param name="e">routed event args e</param>
+        private void sub100ButtonClick(object obj, RoutedEventArgs e)
+        {
+            if (speedValue >= 100)
+            {
+                speedValue = speedValue - 100;
+            }
+            
+            speedLabel.Content = speedValue;
+        }
+
+        /// <summary>
+        /// setup on the canvas the speed label
+        /// </summary>
+        private void SetupSpeedLabel()
+        {
+            speedLabel = new Label();
+            speedLabel.Foreground = Brushes.Red;
+            speedLabel.Margin = new Thickness(2, 15, 0, 0);
+
+            if (!displayCanvas.CanvasChildContainsElement(speedLabel))
+            {
+                displayCanvas.AddCanvasChild(speedLabel);
+            }
         }
 
         /// <summary>
@@ -209,35 +310,37 @@ namespace _3BodyProblem.Body
         /// <param name="deltaTime">difference between each calculation loop</param>
         public void UpdatePositions(float deltaTime)
         {
-            
-            posVer.SetDeltaTime(deltaTime);
-
-            if (firstRun)
+            for (int i = 0; i < speedValue; i++)
             {
-                // calculate acceleration dependant on second body
-                body1.Acceleration = posVer.CalculateAcceleration(body2.Mass, body1.Position, body2.Position);
-                body2.Acceleration = posVer.CalculateAcceleration(body1.Mass, body2.Position, body1.Position);
+                posVer.SetDeltaTime(deltaTime);
 
-                // use acceleration value to calcualte XHalf initial
-                body1.PositionHalf = posVer.CalcualteInitialXhalf(body1.Position, body1.Velocity, body1.Acceleration);
-                body2.PositionHalf = posVer.CalcualteInitialXhalf(body2.Position, body2.Velocity, body2.Acceleration);
+                if (firstRun)
+                {
+                    // calculate acceleration dependant on second body
+                    body1.Acceleration = posVer.CalculateAcceleration(body2.Mass, body1.Position, body2.Position);
+                    body2.Acceleration = posVer.CalculateAcceleration(body1.Mass, body2.Position, body1.Position);
+
+                    // use acceleration value to calcualte XHalf initial
+                    body1.PositionHalf = posVer.CalcualteInitialXhalf(body1.Position, body1.Velocity, body1.Acceleration);
+                    body2.PositionHalf = posVer.CalcualteInitialXhalf(body2.Position, body2.Velocity, body2.Acceleration);
+                }
+
+                // calculate an+1/2 values from either x1/2 or xn+1/2
+                body1.AccelerationHalf = posVer.CalculateAcceleration(body2.Mass, body1.PositionHalf, body2.PositionHalf);
+                body2.AccelerationHalf = posVer.CalculateAcceleration(body1.Mass, body2.PositionHalf, body1.PositionHalf);
+
+                // calculate vn+1 using an+1/2 eq 23 
+                body1.Velocity = posVer.CalculateVelocityNPlusOne(body1.Velocity, body1.AccelerationHalf);
+                body2.Velocity = posVer.CalculateVelocityNPlusOne(body2.Velocity, body2.AccelerationHalf);
+
+                // calculate xn+1 using vn+1 eq 24
+                body1.Position = posVer.CalculatePositionPlusOne(body1.PositionHalf, body1.Velocity);
+                body2.Position = posVer.CalculatePositionPlusOne(body2.PositionHalf, body2.Velocity);
+
+                // calculate next xn+1/2 using xn+1 eq 22
+                body1.PositionHalf = posVer.CalculatePositionNPlusHalf(body1.Position, body1.Velocity);
+                body2.PositionHalf = posVer.CalculatePositionNPlusHalf(body2.Position, body2.Velocity);
             }
-
-            // calculate an+1/2 values from either x1/2 or xn+1/2
-            body1.AccelerationHalf = posVer.CalculateAcceleration(body2.Mass, body1.PositionHalf, body2.PositionHalf);
-            body2.AccelerationHalf = posVer.CalculateAcceleration(body1.Mass, body2.PositionHalf, body1.PositionHalf);
-
-            // calculate vn+1 using an+1/2 eq 23 
-            body1.Velocity = posVer.CalculateVelocityNPlusOne(body1.Velocity, body1.AccelerationHalf);
-            body2.Velocity = posVer.CalculateVelocityNPlusOne(body2.Velocity, body2.AccelerationHalf);
-
-            // calculate xn+1 using vn+1 eq 24
-            body1.Position = posVer.CalculatePositionPlusOne(body1.PositionHalf, body1.Velocity);
-            body2.Position = posVer.CalculatePositionPlusOne(body2.PositionHalf, body2.Velocity);
-
-            // calculate next xn+1/2 using xn+1 eq 22
-            body1.PositionHalf = posVer.CalculatePositionNPlusHalf(body1.Position, body1.Velocity);
-            body2.PositionHalf = posVer.CalculatePositionNPlusHalf(body2.Position, body2.Velocity);
         }
 
         /// <summary>
@@ -245,12 +348,8 @@ namespace _3BodyProblem.Body
         /// </summary>
         public void Render()
         {
-            if (!displayCanvas.CanvasChildContainsElement(fpsLabel))
-            {
-                displayCanvas.AddCanvasChild(fpsLabel);
-            }
-
             fpsLabel.Content = "FPS: " + fps.CurrentFPS.ToString("F2");
+            speedLabel.Content = "Speed: " + speedValue + "x";
 
             sprite1.SetPosition(body1.Position / positionDivider);
             sprite2.SetPosition(body2.Position/ positionDivider);
