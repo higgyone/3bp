@@ -58,6 +58,14 @@ namespace _3BodyProblem.Calculations
             return new Vector2(accX, accY);
         }
 
+        public Vector2 CalculateAcceleration3Bodies(float mass2, float mass3, Vector2 pos1, Vector2 pos2, Vector2 pos3)
+        {
+            var acc1To2 = CalculateAcceleration(mass2, pos1, pos2);
+            var acc1To3 = CalculateAcceleration(mass3, pos1, pos3);
+            var resultantAcc = Vector2.Add(acc1To2, acc1To3);
+            return resultantAcc;
+        }
+
         /// <summary>
         /// calculate the alpha between 2 vectors which is radius cubed (r^3)
         /// </summary>

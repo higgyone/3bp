@@ -56,8 +56,9 @@ namespace _3BodyProblem
             bodyManager = new BodyManager
             (
                 renderer, 
-                new Body.Body(10000000000000f, 25, new Vector2(2000, 1000), new Vector2(0.3f, 0.001f)),
-                new Body.Body(10000000000000f, 25, new Vector2(5000, 2000), new Vector2(-0.3f, 0.0000000001f))
+                new Body.Body(10000000000000f, 25, new Vector2(46000, 10000), new Vector2(0.3f, 0.000000001f)),
+                new Body.Body(10000000000000f, 20, new Vector2(39000, 13000), new Vector2(-0.3f, 0.0000000001f)),
+                new Body.Body(10000000000000f, 15, new Vector2(33000, 15000), new Vector2(-0.1f, 0.0000000001f))
             );
         }
 
@@ -68,7 +69,7 @@ namespace _3BodyProblem
         private void GameLoop(float elapsedTime)
         {
 
-           bodyManager.UpdatePositions(deltaTime);
+           bodyManager.UpdatePositions3Bodies(deltaTime);
 
             bodyManager.UpdateBackground(elapsedTime * timeMultiplier, timeMultiplier);
 
