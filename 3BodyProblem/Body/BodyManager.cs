@@ -4,6 +4,7 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
+using System.Numerics;
 
 namespace _3BodyProblem.Body
 {
@@ -292,6 +293,7 @@ namespace _3BodyProblem.Body
         {
             fieldValue += 5;
             fieldLabel.Content = fieldValue;
+            CenterBodies();
         }
 
         /// <summary>
@@ -322,6 +324,8 @@ namespace _3BodyProblem.Body
             {
                 fieldValue -= 5;
             }
+
+            CenterBodies();
         }
 
         /// <summary>
@@ -374,7 +378,7 @@ namespace _3BodyProblem.Body
         private void CreateBody1Sprite()
         {
             body1Image = new Image();
-            Uri imageUri = new Uri(@"target.png", UriKind.Relative);
+            Uri imageUri = new Uri(@"body1.png", UriKind.Relative);
             //Uri imageUri = new Uri(string.Format(@"{0}", textureManager.Get("redTarget")), UriKind.Relative);
 
             body1Image.Source = new BitmapImage(imageUri);
@@ -397,7 +401,7 @@ namespace _3BodyProblem.Body
         private void CreateBody2Sprite()
         {
             body2Image = new Image();
-            Uri imageUri = new Uri(@"target.png", UriKind.Relative);
+            Uri imageUri = new Uri(@"body2.png", UriKind.Relative);
 
             body2Image.Source = new BitmapImage(imageUri);
             body2Image.Width = body2.Diameter;
@@ -419,7 +423,7 @@ namespace _3BodyProblem.Body
         private void CreateBody3Sprite()
         {
             body3Image = new Image();
-            Uri imageUri = new Uri(@"target.png", UriKind.Relative);
+            Uri imageUri = new Uri(@"body3.png", UriKind.Relative);
 
             body3Image.Source = new BitmapImage(imageUri);
             body3Image.Width = body3.Diameter;
@@ -433,6 +437,33 @@ namespace _3BodyProblem.Body
             body3Outline.RadiusY = body3.Diameter / 2;
             body3Outline.Freeze();
             body3Image.Clip = body3Outline;
+        }
+
+        /// <summary>
+        /// center the bodies on the screen with body 2 at the center
+        /// </summary>
+        private void CenterBodies()
+        {
+            // get the relatve width center of the display that is modified by the field of view value
+            var widthCenter = (displayCanvas.GetCanvasWidth() / 2) * fieldValue;
+
+            // get the relative height center of the display canvas that is modified by the field of view value
+            var heightCenter = (displayCanvas.GetCanvasHeight() / 2) * fieldValue;
+
+            var displayCenter = new Vector2((float)widthCenter, (float)heightCenter);
+
+            // set body2 at the center and move the rest relative to this
+
+            // difference between body2 position and center to move all bodies
+            var body2CenterDelta = Vector2.Subtract(displayCenter, body2.Position);
+
+            // set bodyw position to center display
+            body2.Position = displayCenter;
+
+            // set the bodies relative to the center
+            body1.Position = Vector2.Add(body2CenterDelta, body1.Position);
+            body3.Position = Vector2.Add(body2CenterDelta, body3.Position);
+
         }
 
         /// <summary>
